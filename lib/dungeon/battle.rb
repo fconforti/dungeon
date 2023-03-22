@@ -10,14 +10,12 @@ module Dungeon
 
     def fight
       loop do
-        @receiver.hp -= rand(10)
-        if @receiver.hp > 0
-          @attacker.hp -= rand(10)
-        end
+        @attacker.attack(@receiver)
+        @receiver.attack(@attacker) if @receiver.alive?
         puts "receiver: #{receiver.hp}"
         puts "attacker: #{attacker.hp}"
         puts 
-        break if @attacker.hp < 0 || @receiver.hp < 0
+        break if @attacker.dead? || @receiver.dead?
       end
     end
 
