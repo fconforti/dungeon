@@ -1,16 +1,21 @@
+require "yaml"
+
 module Dungeon
   class Character
 
-    attr_accessor :hp, :xp, :gold
+    attr_accessor :type, :hp, :strength, :speed, :xp, :gold
 
-    def initialize(hp: 100, xp: 0, gold: 10)
-      @hp = hp
+    def initialize(type: "warrior", xp: 0, gold: 0)
+      @type = type
+      @hp = base_stats["hp"][0]
+      @strength = base_stats["strength"][0]
+      @speed = base_stats["speed"][0]
       @xp = xp
       @gold = gold
     end
 
     def attack(character)
-      character.hp -= rand(10)
+      Attack.new(self, character).resolve
     end
 
     def alive?
@@ -19,6 +24,11 @@ module Dungeon
 
     def dead?
       !alive?
+    end
+
+    def base_stats
+      @yaml ||= YAML.load_file("config/characters.yml")
+      @yaml[@type]
     end
 
   end

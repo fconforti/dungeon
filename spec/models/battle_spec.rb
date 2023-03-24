@@ -1,14 +1,14 @@
 RSpec.describe Battle do
 
   describe "#resolve" do
-    battle = new_battle(resolve: true)
+    battle = new_battle(resolve: true, gold: 20)
 
     it "determines a single winner" do
       expect battle.attacker.dead? ^ battle.receiver.dead?
     end
 
-    it "transfers the looser's gold to the winner" do
-      expect(battle.winner.gold).to eq(20)
+    it "transfers 20 gold stones from the looser to the winner" do
+      expect(battle.winner.gold).to eq(40)
       expect(battle.looser.gold).to eq(0)
     end
 

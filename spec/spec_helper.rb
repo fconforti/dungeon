@@ -99,10 +99,20 @@ end
 
 include Dungeon
 
-def new_battle(resolve: false)
+def new_battle(resolve: false, gold: 0)
   attacker = Character.new
   receiver = Character.new
+  attacker.gold = gold
+  receiver.gold = gold
   battle = Battle.new(attacker, receiver)
   battle.resolve if resolve
   battle
+end
+
+def new_attack(attacker_type: "warrior", receiver_type: "warrior", resolve: false)
+  attacker = Character.new(type: attacker_type)
+  receiver = Character.new(type: receiver_type)
+  attack = Attack.new(attacker, receiver)
+  attack.resolve if resolve
+  attack
 end
