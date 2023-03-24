@@ -8,4 +8,4 @@ attacker = Character.new(hp: 100)
 receiver = Character.new(hp: 100)
 
 battle = Battle.new(attacker, receiver)
-battle.fight
+battle.resolve

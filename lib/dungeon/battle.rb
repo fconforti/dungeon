@@ -8,16 +8,43 @@ module Dungeon
       @receiver = receiver
     end
 
-    def fight
+    def resolve
       loop do
         @attacker.attack(@receiver)
         @receiver.attack(@attacker) if @receiver.alive?
-        puts "receiver: #{receiver.hp}"
-        puts "attacker: #{attacker.hp}"
-        puts 
-        break if @attacker.dead? || @receiver.dead?
+        break if resolved?
       end
+      reward_winner
+      winner
     end
 
+    def resolved?
+      @attacker.dead? || @receiver.dead?
+    end
+
+    def winner
+      return unless resolved?
+      @receiver.dead? ? @attacker : @receiver
+    end
+
+    def looser
+      return unless resolved?
+      @receiver.dead? ? @receiver : @attacker
+    end
+
+    private
+    def reward_winner
+      transfer_gold
+      add_experience
+    end
+
+    def transfer_gold
+      winner.gold += looser.gold
+      looser.gold = 0
+    end
+
+    def add_experience
+      winner.xp += 10
+    end
   end
 end

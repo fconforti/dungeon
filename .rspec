@@ -1,0 +1,3 @@
+--require './lib/dungeon'
+--require spec_helper
+--format 'documentation'

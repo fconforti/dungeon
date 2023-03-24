@@ -1,10 +1,12 @@
 module Dungeon
   class Character
 
-    attr_accessor :hp
+    attr_accessor :hp, :xp, :gold
 
-    def initialize(hp: 100)
+    def initialize(hp: 100, xp: 0, gold: 10)
       @hp = hp
+      @xp = xp
+      @gold = gold
     end
 
     def attack(character)
