@@ -1,3 +1,6 @@
 require_relative 'dungeon/attack'
 require_relative 'dungeon/battle'
 require_relative 'dungeon/character'
+require_relative 'dungeon/dice'
+require_relative 'dungeon/dice/hit_dice'
+require_relative 'dungeon/dice/damage_dice'
