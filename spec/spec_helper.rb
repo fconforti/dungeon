@@ -116,3 +116,10 @@ def new_attack(attacker_type: "warrior", receiver_type: "warrior", resolve: fals
   attack.resolve if resolve
   attack
 end
+
+# fixes a bug with TTY::Prompt::Test
+class StringIO
+  def ioctl(*)
+    80
+  end
+end

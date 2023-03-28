@@ -1,7 +1,15 @@
 RSpec.describe Battle do
 
-  describe "#resolve" do
-    battle = new_battle(resolve: true, gold: 20)
+  describe "#resolve" do   
+  
+    let(:prompt) { TTY::Prompt::Test.new }
+    let(:battle) { new_battle(gold: 20) }
+
+    before do
+      allow(prompt).to receive(:select).and_return "A"
+      allow(battle).to receive(:prompt).and_return prompt
+      battle.resolve
+    end
 
     it "determines a single winner" do
       expect battle.attacker.dead? ^ battle.receiver.dead?
@@ -19,10 +27,16 @@ RSpec.describe Battle do
   end
 
   describe "#resolved?" do
+
+    let(:prompt) { TTY::Prompt::Test.new }
+    let(:battle) { new_battle }
+
+    before do
+      allow(prompt).to receive(:select).and_return "A"
+      allow(battle).to receive(:prompt).and_return prompt
+    end
   
     context "when not resolved" do
-      battle = new_battle
-
       it "returns false" do
         expect(battle.resolved?).to be false
       end
@@ -30,7 +44,9 @@ RSpec.describe Battle do
     end
 
     context "when resolved" do
-      battle = new_battle(resolve: true)
+      before do
+        battle.resolve
+      end
 
       it "returns true" do
         expect(battle.resolved?).to be true
@@ -41,8 +57,15 @@ RSpec.describe Battle do
   end
 
   describe "#winner" do
+    let(:prompt) { TTY::Prompt::Test.new }
+    let(:battle) { new_battle }
+
+    before do
+      allow(prompt).to receive(:select).and_return "A"
+      allow(battle).to receive(:prompt).and_return prompt
+    end
+
     context "when not resolved" do
-      battle = new_battle
 
       it "returns nil" do
         expect(battle.winner).to be nil
@@ -51,7 +74,9 @@ RSpec.describe Battle do
     end
 
     context "when resolved" do
-      battle = new_battle(resolve: true)
+      before do
+        battle.resolve
+      end
 
       it "returns the winner character" do
         winner = battle.receiver.dead? ? battle.attacker : battle.receiver
@@ -63,8 +88,15 @@ RSpec.describe Battle do
   end
 
   describe "#looser" do
+    let(:prompt) { TTY::Prompt::Test.new }
+    let(:battle) { new_battle }
+
+    before do
+      allow(prompt).to receive(:select).and_return "A"
+      allow(battle).to receive(:prompt).and_return prompt
+    end
+
     context "when not resolved" do
-      battle = new_battle
 
       it "returns nil" do
         expect(battle.looser).to be nil
@@ -73,7 +105,9 @@ RSpec.describe Battle do
     end
 
     context "when resolved" do
-      battle = new_battle(resolve: true)
+      before do
+        battle.resolve
+      end
 
       it "returns the looser character" do
         looser = battle.receiver.dead? ? battle.receiver : battle.attacker

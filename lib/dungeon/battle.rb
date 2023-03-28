@@ -1,6 +1,10 @@
 module Dungeon
   class Battle
 
+    ATTACK="A"
+    RUNAWAY="R"
+    ACTIONS = [ATTACK, RUNAWAY].freeze
+
     attr_accessor :attacker, :receiver
 
     def initialize(attacker, receiver)
@@ -10,9 +14,14 @@ module Dungeon
 
     def resolve
       loop do
-        @attacker.attack(@receiver)
-        @receiver.attack(@attacker) if @receiver.alive?
-        break if resolved?
+        case prompt.select("What's next?", ACTIONS)
+        when ATTACK
+          @attacker.attack(@receiver)
+          @receiver.attack(@attacker) if @receiver.alive?
+          break if resolved?
+        when RUNAWAY
+          break
+        end
       end
       reward_winner
       winner
@@ -45,6 +54,10 @@ module Dungeon
 
     def add_experience
       winner.xp += 10
+    end
+
+    def prompt
+      TTY::Prompt.new
     end
   end
 end
