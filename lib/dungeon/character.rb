@@ -3,10 +3,11 @@ require "yaml"
 module Dungeon
   class Character
 
-    attr_accessor :type, :hp, :strength, :speed, :xp, :gold
+    attr_accessor :type, :name, :hp, :strength, :speed, :xp, :gold
 
     def initialize(type: "warrior", xp: 0, gold: 0)
       @type = type
+      @name = base_stats["name"]
       @hp = base_stats["hp"][0]
       @strength = base_stats["strength"][0]
       @speed = base_stats["speed"][0]

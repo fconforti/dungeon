@@ -1,4 +1,5 @@
 --require './lib/dungeon'
 --require 'tty/prompt/test'
+--require 'tty/logger'
 --require spec_helper
 --format 'documentation'

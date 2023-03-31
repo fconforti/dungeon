@@ -1,8 +1,8 @@
 module Dungeon
   class Battle
 
-    ATTACK="A"
-    RUNAWAY="R"
+    ATTACK="Attack"
+    RUNAWAY="Run away"
     ACTIONS = [ATTACK, RUNAWAY].freeze
 
     attr_accessor :attacker, :receiver
@@ -13,32 +13,43 @@ module Dungeon
     end
 
     def resolve
+      logger.info "#{attacker.name} engages a battle with #{receiver.name}"
       loop do
-        case prompt.select("What's next?", ACTIONS)
+        puts
+        logger.info "#{@attacker.name} has #{@attacker.hp} hp. #{@receiver.name} has #{@receiver.hp} hp."
+        case prompt.select("#{attacker.name}, choose your next action:", ACTIONS)
         when ATTACK
-          @attacker.attack(@receiver)
-          @receiver.attack(@attacker) if @receiver.alive?
-          break if resolved?
+          logger.info "#{attacker.name} attacks #{receiver.name}"
+          attacker.attack(receiver)
+          if @receiver.alive?
+            logger.info "#{receiver.name} attacks #{attacker.name}"
+            receiver.attack(attacker) 
+          end
+          if resolved?
+            puts
+            logger.info "#{winner.name} wins the battle with #{looser.name}!"
+            reward_winner
+            break
+          end
         when RUNAWAY
+          logger.info "#{attacker.name} runs away"
           break
         end
       end
-      reward_winner
-      winner
     end
 
     def resolved?
-      @attacker.dead? || @receiver.dead?
+      attacker.dead? || receiver.dead?
     end
 
     def winner
       return unless resolved?
-      @receiver.dead? ? @attacker : @receiver
+      receiver.dead? ? attacker : receiver
     end
 
     def looser
       return unless resolved?
-      @receiver.dead? ? @receiver : @attacker
+      receiver.dead? ? receiver : attacker
     end
 
     private
@@ -48,16 +59,36 @@ module Dungeon
     end
 
     def transfer_gold
+      logger.info "#{winner.name} gets rewarded with #{looser.gold} gold."
       winner.gold += looser.gold
       looser.gold = 0
     end
 
     def add_experience
+      logger.info "#{winner.name} gets 10 xp."
       winner.xp += 10
     end
 
     def prompt
       TTY::Prompt.new
     end
+
+    def logger
+      TTY::Logger.new do |config|
+        config.handlers = [
+          [:console, 
+            styles: 
+              {
+                info: {
+                  symbol: "⌗ ",
+                  label: "INFO",
+                  color: :blue,
+                  levelpad: 0
+                }
+              }
+          ]
+        ]
+      end
+    end    
   end
 end
